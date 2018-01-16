@@ -22,37 +22,13 @@ SkrotAudioProcessor::~SkrotAudioProcessor()
 }
 
 //==============================================================================
-const String SkrotAudioProcessor::getName() const
-{
-    return JucePlugin_Name;
-}
+const String SkrotAudioProcessor::getName() const {return JucePlugin_Name;}
 
-bool SkrotAudioProcessor::acceptsMidi() const
-{
-   #if JucePlugin_WantsMidiInput
-    return true;
-   #else
-    return false;
-   #endif
-}
+bool SkrotAudioProcessor::acceptsMidi() const {return false;}
 
-bool SkrotAudioProcessor::producesMidi() const
-{
-   #if JucePlugin_ProducesMidiOutput
-    return true;
-   #else
-    return false;
-   #endif
-}
+bool SkrotAudioProcessor::producesMidi() const {return false; }
 
-bool SkrotAudioProcessor::isMidiEffect() const
-{
-   #if JucePlugin_IsMidiEffect
-    return true;
-   #else
-    return false;
-   #endif
-}
+bool SkrotAudioProcessor::isMidiEffect() const {return false;}
 
 double SkrotAudioProcessor::getTailLengthSeconds() const
 {
@@ -86,7 +62,7 @@ void SkrotAudioProcessor::changeProgramName (int index, const String& newName)
 //==============================================================================
 void SkrotAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    threshold.store(0.5f);
+    threshold.store (0.5f);
 }
 
 void SkrotAudioProcessor::releaseResources()
@@ -133,9 +109,8 @@ void SkrotAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     {
         
         auto inputData = buffer.getReadPointer (channel);
+        auto channelData = buffer.getWritePointer (channel);
         
-        float* channelData = buffer.getWritePointer (channel);
-
         for (int i = 0; i < buffer.getNumSamples(); ++i)
         {
             
@@ -178,6 +153,11 @@ void SkrotAudioProcessor::setStateInformation (const void* data, int sizeInBytes
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
+}
+
+void SkrotAudioProcessor::setThreshold(float val)
+{
+    threshold.store (val);
 }
 
 //==============================================================================

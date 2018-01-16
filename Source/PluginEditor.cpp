@@ -2,46 +2,74 @@
 #include "PluginEditor.h"
 
 
-//==============================================================================
 SkrotAudioProcessorEditor::SkrotAudioProcessorEditor (SkrotAudioProcessor& p)
-    : AudioProcessorEditor (&p), processor (p)
+: AudioProcessorEditor (&p), processor (p)
 {
-
-    addAndMakeVisible(textbox);
-    textbox.addListener(this);
-    textbox.setBounds(100,0, 100, 100);
     
     setSize (400, 300);
+    setResizable (true, true);
+
+    
+    threshold = 0.5;
+    
+    addAndMakeVisible (slider);
+    slider.addListener (this);
+    slider.setBounds (Rectangle<int> {50,0,200,40});
+    slider.setRange(0.0f,1.0f);
+    
 }
 
 SkrotAudioProcessorEditor::~SkrotAudioProcessorEditor()
 {
 }
 
-//==============================================================================
+
 void SkrotAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (juce::Colours::black);
 
     g.setColour (Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("SKROT", getLocalBounds(), Justification::centred, 1);
+    g.setFont (juce::Font {"Helvetica", 10.0f, bold});
+    g.drawText ("SKROT", Rectangle<int> {0,0,50,30}, 0);
     
-    for (int i = 0; i < 100; i++)
-    {
-        path.lineTo(static_cast<float>(i), static_cast<float>(i));
-    }
-    
-    g.strokePath(path, juce::PathStrokeType(2.0f));
-    
+    updateCurve();
+    g.strokePath (path, juce::PathStrokeType {1.0f});
     
 }
 
-void textEditorTextChanged (TextEditor& textbox)
+void inline SkrotAudioProcessorEditor::updateCurve()
 {
-    std::cout << textbox.getText();
+    path.clear();
+    
+    float sample;
+    int width = getLocalBounds().getWidth();
+    int height = getLocalBounds().getHeight();
+    int y = height/2;
+    
+    for (int i = 0; i < width; ++i)
+    {
+        sample = sin (i*6.28/width);
+        
+        if (sample >= threshold)
+        {
+            sample = 2*threshold - sample;
+        }
+        else if (sample <= -threshold)
+        {
+            sample = -2*threshold - sample;
+        }
+        
+        path.lineTo (i, y*sample+y);
+    }
 }
 
+void SkrotAudioProcessorEditor::sliderValueChanged (Slider* s)
+{
+    processor.setThreshold (static_cast<float> (slider.getValue()));
+    threshold = static_cast<float> (slider.getValue());
+    this->repaint();
+}
+    
 void SkrotAudioProcessorEditor::resized()
 {
     
