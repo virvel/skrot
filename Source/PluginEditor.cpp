@@ -1,13 +1,3 @@
-/*
-  ==============================================================================
-
-    This file was auto-generated!
-
-    It contains the basic framework code for a JUCE plugin editor.
-
-  ==============================================================================
-*/
-
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
@@ -16,8 +6,11 @@
 SkrotAudioProcessorEditor::SkrotAudioProcessorEditor (SkrotAudioProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
+
+    addAndMakeVisible(textbox);
+    textbox.addListener(this);
+    textbox.setBounds(100,0, 100, 100);
+    
     setSize (400, 300);
 }
 
@@ -28,16 +21,28 @@ SkrotAudioProcessorEditor::~SkrotAudioProcessorEditor()
 //==============================================================================
 void SkrotAudioProcessorEditor::paint (Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
+    g.fillAll (juce::Colours::black);
 
     g.setColour (Colours::white);
     g.setFont (15.0f);
     g.drawFittedText ("SKROT", getLocalBounds(), Justification::centred, 1);
+    
+    for (int i = 0; i < 100; i++)
+    {
+        path.lineTo(static_cast<float>(i), static_cast<float>(i));
+    }
+    
+    g.strokePath(path, juce::PathStrokeType(2.0f));
+    
+    
+}
+
+void textEditorTextChanged (TextEditor& textbox)
+{
+    std::cout << textbox.getText();
 }
 
 void SkrotAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    
 }

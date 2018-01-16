@@ -12,6 +12,11 @@
 		<key>Skrot - Shared Code.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>4</integer>
+		</dict>
+		<key>Skrot - Standalone Plugin.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>3</integer>
 		</dict>
 		<key>Skrot - VST.xcscheme</key>
