@@ -2,6 +2,7 @@
 
 #include "../JuceLibraryCode/JuceHeader.h"
 #include "PluginProcessor.h"
+#include "LaF.h"
 
 
 class SkrotAudioProcessorEditor  : public AudioProcessorEditor, public Slider::Listener
@@ -20,7 +21,7 @@ private:
     Slider slider;
     Path path;
     float threshold;
-    float* sineWave;
+    LaF newLaF;
     SkrotAudioProcessor& processor;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SkrotAudioProcessorEditor)

@@ -1,5 +1,6 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "LaF.h"
 
 
 SkrotAudioProcessorEditor::SkrotAudioProcessorEditor (SkrotAudioProcessor& p)
@@ -7,8 +8,7 @@ SkrotAudioProcessorEditor::SkrotAudioProcessorEditor (SkrotAudioProcessor& p)
 {
     
     setSize (400, 300);
-    setResizable (true, true);
-
+    setLookAndFeel(&newLaF);
     
     threshold = 0.5;
     
@@ -21,22 +21,24 @@ SkrotAudioProcessorEditor::SkrotAudioProcessorEditor (SkrotAudioProcessor& p)
 
 SkrotAudioProcessorEditor::~SkrotAudioProcessorEditor()
 {
+    setLookAndFeel(nullptr);
 }
 
 
 void SkrotAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (juce::Colours::black);
+    g.fillAll (findColour(ResizableWindow::backgroundColourId));
 
     g.setColour (Colours::white);
     g.setFont (juce::Font {"Helvetica", 10.0f, bold});
     g.drawText ("SKROT", Rectangle<int> {0,0,50,30}, 0);
     
     updateCurve();
-    g.strokePath (path, juce::PathStrokeType {1.0f});
+    g.strokePath (path, juce::PathStrokeType {2.0f});
     
 }
 
+// Update path to represent the current threshold value
 void inline SkrotAudioProcessorEditor::updateCurve()
 {
     path.clear();

@@ -99,6 +99,7 @@ void SkrotAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
     ScopedNoDenormals noDenormals;
     const int totalNumInputChannels  = getTotalNumInputChannels();
     const int totalNumOutputChannels = getTotalNumOutputChannels();
+    
 
 
     for (int i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
@@ -114,18 +115,16 @@ void SkrotAudioProcessor::processBlock (AudioSampleBuffer& buffer, MidiBuffer& m
         for (int i = 0; i < buffer.getNumSamples(); ++i)
         {
             
-            if (*inputData >= threshold.load()) {
-                *channelData = 2*threshold.load() - *inputData;
+            if (inputData[i] >= threshold.load()) {
+                channelData[i] = 2*threshold.load() - inputData[i];
             }
-            else if (*inputData <= -threshold.load())
+            else if (inputData[i] <= -threshold.load())
             {
-                *channelData = - *inputData - 2*threshold.load();
+                channelData[i] = -inputData[i] - 2*threshold.load();
             }
             else {
-                *channelData = *inputData;
+                channelData[i] = inputData[i];
             }
-            channelData++;
-            inputData++;
         }
     }
 }

@@ -13,6 +13,8 @@
               jucerVersion="5.2.0" pluginVSTCategory="">
   <MAINGROUP id="HrMKIZ" name="Skrot">
     <GROUP id="{686009FB-3384-DE29-D655-06283B6C0F90}" name="Source">
+      <FILE id="KwH61U" name="LaF.cpp" compile="1" resource="0" file="Source/LaF.cpp"/>
+      <FILE id="HFdXG5" name="LaF.h" compile="0" resource="0" file="Source/LaF.h"/>
       <FILE id="QNI5lF" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
       <FILE id="pKZolP" name="PluginProcessor.h" compile="0" resource="0"
