@@ -48,6 +48,8 @@ void inline SkrotAudioProcessorEditor::updateCurve()
     int height = getLocalBounds().getHeight();
     int y = height/2;
     
+    path.startNewSubPath(0, y);
+    
     for (int i = 0; i < width; ++i)
     {
         sample = sin (i*6.28/width);
