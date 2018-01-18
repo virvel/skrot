@@ -18,9 +18,11 @@ public:
     void updateCurve();
 
 private:
-    Slider slider;
+    Slider thresholdSlider;
+    Slider powerSlider;
     Path path;
     float threshold;
+    float power;
     LaF newLaF;
     SkrotAudioProcessor& processor;
 

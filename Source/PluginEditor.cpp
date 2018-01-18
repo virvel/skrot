@@ -4,18 +4,21 @@
 
 
 SkrotAudioProcessorEditor::SkrotAudioProcessorEditor (SkrotAudioProcessor& p)
-: AudioProcessorEditor (&p), processor (p)
+: AudioProcessorEditor (&p), threshold {0.5}, processor (p)
 {
     
     setSize (400, 300);
-    setLookAndFeel(&newLaF);
+    setLookAndFeel (&newLaF);
     
-    threshold = 0.5;
+    addAndMakeVisible (thresholdSlider);
+    thresholdSlider.addListener (this);
+    thresholdSlider.setBounds (Rectangle<int> {50,0,200,40});
+    thresholdSlider.setRange (0.0f,1.0f);
     
-    addAndMakeVisible (slider);
-    slider.addListener (this);
-    slider.setBounds (Rectangle<int> {50,0,200,40});
-    slider.setRange(0.0f,1.0f);
+    addAndMakeVisible (powerSlider);
+    powerSlider.addListener (this);
+    powerSlider.setBounds (Rectangle<int> {50, 30, 200, 40});
+    powerSlider.setRange (0, 10);
     
 }
 
@@ -27,14 +30,17 @@ SkrotAudioProcessorEditor::~SkrotAudioProcessorEditor()
 
 void SkrotAudioProcessorEditor::paint (Graphics& g)
 {
-    g.fillAll (findColour(ResizableWindow::backgroundColourId));
+    g.fillAll (findColour (ResizableWindow::backgroundColourId));
 
     g.setColour (Colours::white);
-    g.setFont (juce::Font {"Helvetica", 10.0f, bold});
-    g.drawText ("SKROT", Rectangle<int> {0,0,50,30}, 0);
+    g.setFont (juce::Font {"Open Sans", 14.0f, bold});
+    g.drawText ("SKROT", Rectangle<int> {5,0,50,30}, 0);
     
     updateCurve();
-    g.strokePath (path, juce::PathStrokeType {2.0f});
+    g.setColour (Colour {203, 171, 210});
+    g.strokePath (path, juce::PathStrokeType {3.0f,
+                                              juce::PathStrokeType::curved,
+                                              juce::PathStrokeType::rounded});
     
 }
 
@@ -48,30 +54,30 @@ void inline SkrotAudioProcessorEditor::updateCurve()
     int height = getLocalBounds().getHeight();
     int y = height/2;
     
-    path.startNewSubPath(0, y);
+    path.startNewSubPath (0, y);
     
     for (int i = 0; i < width; ++i)
     {
         sample = sin (i*6.28/width);
         
-        if (sample >= threshold)
-        {
-            sample = 2*threshold - sample;
-        }
-        else if (sample <= -threshold)
-        {
-            sample = -2*threshold - sample;
-        }
+        sample = pow (sample,static_cast<int>(power)*2+1);
         
+        if (sample >= threshold){
+            sample = 2*threshold - sample;}
+        else if (sample <= -threshold)
+            sample = -2*threshold - sample;
+        
+
         path.lineTo (i, y*sample+y);
     }
 }
 
 void SkrotAudioProcessorEditor::sliderValueChanged (Slider* s)
 {
-    processor.setThreshold (static_cast<float> (slider.getValue()));
-    threshold = static_cast<float> (slider.getValue());
-    this->repaint();
+    processor.setThreshold (thresholdSlider.getValue());
+    threshold = thresholdSlider.getValue();
+    power = powerSlider.getValue();
+    repaint();
 }
     
 void SkrotAudioProcessorEditor::resized()
