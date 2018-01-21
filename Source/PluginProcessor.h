@@ -51,6 +51,7 @@ public:
 private:
     
     std::atomic<float> threshold;
+    LinearSmoothedValue<std::atomic<float>> thrs;
     
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SkrotAudioProcessor)
